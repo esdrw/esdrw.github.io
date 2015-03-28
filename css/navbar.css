@@ -1,0 +1,36 @@
+.container {
+  max-width: 800px;
+}
+.navbar, .navbar-border {
+  display: block;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+.navbar-list {
+  list-style: none;
+  margin-bottom: 0; 
+}
+.navbar-button {
+  position: relative;
+  float: right;
+  margin-bottom: 0; 
+}
+.navbar-text {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .2rem;
+  margin-right: 35px;
+  text-decoration: none;
+  line-height: 6.5rem;
+  color: #222; 
+}
+#home-button {
+  float: left;
+}
+#home-text {
+  font-size: 16px;
+  font-weight: 700;
+}
