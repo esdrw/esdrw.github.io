@@ -2,19 +2,39 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://ewang12.github.io/</loc>
+    <loc>http://localhost:1313/</loc>
     <lastmod>2015-03-28T19:41:54-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://ewang12.github.io/about/about/</loc>
+    <loc>http://localhost:1313/about/about/</loc>
     <lastmod>2015-03-28T19:41:54-04:00</lastmod>
   </url>
   
   <url>
-    <loc>http://ewang12.github.io/project/first-project/</loc>
-    <lastmod>2015-03-28T19:00:47-04:00</lastmod>
+    <loc>http://localhost:1313/project/neocache/</loc>
+    <lastmod>2015-04-05T19:10:46-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://localhost:1313/project/compiler/</loc>
+    <lastmod>2015-04-05T20:26:07-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://localhost:1313/project/daOptimizer/</loc>
+    <lastmod>2015-04-05T20:26:20-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://localhost:1313/project/hackNbash/</loc>
+    <lastmod>2015-04-05T20:26:36-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://localhost:1313/project/jigsaw/</loc>
+    <lastmod>2015-04-05T20:26:30-04:00</lastmod>
   </url>
   
 </urlset>

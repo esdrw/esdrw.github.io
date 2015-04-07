@@ -3,9 +3,9 @@
 <head>
 
   <meta charset="utf-8">
-  <base href="http://ewang12.github.io/">
+  <base href="http://localhost:1313/">
   <title>Esther Wang</title>
-  <link rel="canonical" href="http://ewang12.github.io/project/">
+  <link rel="canonical" href="http://localhost:1313/project/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -27,10 +27,10 @@
           <a class="navbar-text" id="home-text" href="#">Esther Wang</a>
         </li>
         <li class="navbar-button">
-          <a class="navbar-text" href="http://ewang12.github.io/about/">About</a>
+          <a class="navbar-text" href="http://localhost:1313/about/">About</a>
         </li>
         <li class="navbar-button">
-          <a class="navbar-text" href="http://ewang12.github.io/project/">Projects</a>
+          <a class="navbar-text" href="http://localhost:1313/project/">Projects</a>
         </li>
       </ul>
     </div> 
@@ -40,7 +40,76 @@
   <div class="container" style="margin-top:5%">
     <div class="row" style="margin-bottom: 2%">
       <h4 class="project-header">Some Projects</h4>
-      <p>Here will be summaries of some projects I've worked on. They'll be out with my next update of this site. After that, individual pages for each project will be the next big thing! </p>
+      <p>Here are summaries of some projects I've worked on. Individual pages for each project will be out next! </p>
     </div>
+    
+      <div class="row">
+  <div class="four columns">
+    <img src="img/neocache1.png">
   </div>
-</body>
+  <div class="eight columns">
+    <h4>Neocache</h4>
+    <p><b>Spring 2015</b><br>
+       Neocache is a chrome extension created at TartanHacks 2015 which allows users to annotate arbitrary content around the web. The image on the left shows a cut of a page that was annotated with many comments in the course of our testing. Annotations are marked with a small quill icon. Hovering over the icon displays the content &#34;cached&#34; at that location. When users activate the extension, they see content cached by themselves or other users. The extension comes with a dashboard page where users join and leave groups to filter which caches they see. The dashboard also provides users a way to manage caches that they have set.</p>
+  </div>
+</div>
+
+    <hr>
+    
+      <div class="row">
+  <div class="four columns">
+    <img src="img/compiler1.png">
+  </div>
+  <div class="eight columns">
+    <h4>15-411 Compiler</h4>
+    <p><b>Fall 2014</b><br>
+       For 15-411 (Compiler Design), I worked with a partner to develop a compiler in Haskell for the C0 language (a more type-safe subset of C). Our compiler, when it compiled, compiled C0 code to x86-64 assembly, which could be converted to an executable using gcc. Stages of the compiler included parsing, lexing, intermediate code generation, register allocation, and assembly code gen. Supported language features included basic variables, functions, pointers, and arrays. For the final project, we implemented a (almost working) copying collector.</p>
+  </div>
+</div>
+
+    <hr>
+    
+      <div class="row">
+  <div class="four columns">
+    <img src="img/daOptimizer1.png">
+  </div>
+  <div class="eight columns">
+    <h4>daOptimizer</h4>
+    <p><b>Spring 2014</b><br>
+       daOptimizer was a final partner project for 15-440 Distributed Systems. The focus of the project was to implement the Paxos consensus protocol. The application supported by our back end was a web platform for crowdsourced code optimization. Users would either upload code snippets to optimize, or submit optimizations to code entries. Submitted optimizations would be timed, tested for correctness, and accepted if they ran faster than current fastest implementation.</p>
+  </div>
+</div>
+
+    <hr>
+    
+      <div class="row">
+  <div class="four columns">
+    <img src="img/hacknbash1.gif">
+  </div>
+  <div class="eight columns">
+    <h4>Hack &#39;n&#39; Bash</h4>
+    <p><b>Spring 2014</b><br>
+       Hack &#39;n&#39; Bash, created by a team of four, is a webapp for visualizing the remote filesystem space allocated to CMU students. The user controls a robot using arrow keys. Each directory is a region. Files in a directory are represented by hopping sprites. Various Unix commands have analogous actions in this visualization. For example, the robot passes through portals to switch directories. Files can be deleted by the robot attacking them with a lightsaber. Unix commands implemented were scp, rm, ls, cd, and cat.</p>
+  </div>
+</div>
+
+    <hr>
+    
+      <div class="row">
+  <div class="four columns">
+    <img src="img/jigsaw1.png">
+  </div>
+  <div class="eight columns">
+    <h4>Jigsaw Solver</h4>
+    <p><b>Spring 2014</b><br>
+       Given a directory of images of individual puzzle pieces, is it possible to programmatically determine the assembly configuration of the pieces? This was the challenge I took on with the Python wrapper of OpenCV and some photos of a simple jigsaw puzzle. Progress so far consists of identifying sides of a piece and classifying the type of a side: whether it has an extrusion or fits with the extrusion from another piece, or is part of the edge of the puzzle. Ongoing work is to find a way to compare the contour of an extrusion with the contour of a notch in another piece and identify which pair of pieces fits best.</p>
+  </div>
+</div>
+
+    <hr>
+    
+  </div>
+<script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
