@@ -2,55 +2,55 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Projects on Esther Wang</title>
-    <link>http://localhost:1313/project/</link>
+    <link>http://ewang12.github.io/project/</link>
     <description>Recent content in Projects on Esther Wang</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 05 Apr 2015 19:10:46 -0400</lastBuildDate>
-    <atom:link href="http://localhost:1313/project/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://ewang12.github.io/project/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>neocache</title>
-      <link>http://localhost:1313/project/neocache/</link>
+      <link>http://ewang12.github.io/project/neocache/</link>
       <pubDate>Sun, 05 Apr 2015 19:10:46 -0400</pubDate>
       
-      <guid>http://localhost:1313/project/neocache/</guid>
+      <guid>http://ewang12.github.io/project/neocache/</guid>
       <description></description>
     </item>
     
     <item>
       <title>compiler</title>
-      <link>http://localhost:1313/project/compiler/</link>
+      <link>http://ewang12.github.io/project/compiler/</link>
       <pubDate>Sun, 05 Apr 2015 20:26:07 -0400</pubDate>
       
-      <guid>http://localhost:1313/project/compiler/</guid>
+      <guid>http://ewang12.github.io/project/compiler/</guid>
       <description></description>
     </item>
     
     <item>
       <title>daOptimizer</title>
-      <link>http://localhost:1313/project/daOptimizer/</link>
+      <link>http://ewang12.github.io/project/daOptimizer/</link>
       <pubDate>Sun, 05 Apr 2015 20:26:20 -0400</pubDate>
       
-      <guid>http://localhost:1313/project/daOptimizer/</guid>
+      <guid>http://ewang12.github.io/project/daOptimizer/</guid>
       <description></description>
     </item>
     
     <item>
       <title>hackNbash</title>
-      <link>http://localhost:1313/project/hackNbash/</link>
+      <link>http://ewang12.github.io/project/hackNbash/</link>
       <pubDate>Sun, 05 Apr 2015 20:26:36 -0400</pubDate>
       
-      <guid>http://localhost:1313/project/hackNbash/</guid>
+      <guid>http://ewang12.github.io/project/hackNbash/</guid>
       <description></description>
     </item>
     
     <item>
       <title>jigsaw</title>
-      <link>http://localhost:1313/project/jigsaw/</link>
+      <link>http://ewang12.github.io/project/jigsaw/</link>
       <pubDate>Sun, 05 Apr 2015 20:26:30 -0400</pubDate>
       
-      <guid>http://localhost:1313/project/jigsaw/</guid>
+      <guid>http://ewang12.github.io/project/jigsaw/</guid>
       <description></description>
     </item>
     
