@@ -1,8 +1,38 @@
 .header {
-  border-bottom: solid 1px;
+  border-bottom: solid 1px #ddd;
+  overflow: hidden;
 }
 
-.header p {
+.header ul {
   text-align: center;
-  font-size: 1.3em;
+  float: right;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+.header li {
+  list-style: none;
+  display: inline-block;
+  text-transform: uppercase;
+  margin-left: 1.5em;
+}
+
+.header a {
+  color: black;
+  text-decoration: none;
+}
+
+.header a:hover,
+.header a:focus,
+.header a:active {
+  color: #ccc;
+}
+
+.header img {
+  height: 2em;
+  border-radius: 50%;
+  float: left;
+  top: 50%;
+  position: absolute;
+  transform: translate(0, -50%);
 }
