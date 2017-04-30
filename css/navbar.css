@@ -1,34 +1,23 @@
-.header {
-  border-bottom: solid 1px #ddd;
+.navbar .container {
+  /* border-bottom: solid 1px; */
   overflow: hidden;
 }
 
-.header ul {
+.navbar ul {
   text-align: center;
   float: right;
   margin-top: 1.5em;
-  margin-bottom: 1.5em;
+  margin-bottom: 1em;
 }
 
-.header li {
+.navbar li {
   list-style: none;
   display: inline-block;
   text-transform: uppercase;
   margin-left: 1.5em;
 }
 
-.header a {
-  color: black;
-  text-decoration: none;
-}
-
-.header a:hover,
-.header a:focus,
-.header a:active {
-  color: #ccc;
-}
-
-.header img {
+.navbar img {
   height: 2em;
   border-radius: 50%;
   float: left;

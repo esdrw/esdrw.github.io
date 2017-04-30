@@ -1,7 +1,21 @@
-.wrap {
-  width: 70%;
-  max-width: 45em;
-  margin: 0 auto;
-  padding-top: 2%;
+.post {
+  padding-top: 4%;
 }
 
+.post-heading {
+  font-size: 2rem;
+  line-height: 2.5rem;
+  font-weight: bold;
+}
+
+.post-meta {
+  padding-top: 0.5rem;
+  font-style: italic;
+  color: #999;
+}
+
+.post-body {
+  padding-top: 4%;
+  line-height: 1.5rem;
+  font-weight: normal;
+}
