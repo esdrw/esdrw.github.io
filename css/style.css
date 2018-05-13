@@ -49,3 +49,7 @@ p {
   position: relative;
   margin: auto;
 }
+
+.custom-link {
+  font-weight: bold;
+}
