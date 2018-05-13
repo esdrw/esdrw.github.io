@@ -11,10 +11,29 @@
 .post-meta {
   margin-top: 1.5rem;
   font-style: italic;
-  color: #999;
 }
 
 .post-body {
   margin-top: 1.5rem;
   font-weight: normal;
+}
+
+.post-homepage-item {
+  margin-top: 1.5rem;
+}
+
+.post-homepage-item .post-heading {
+  font-size: 2rem;
+  line-height: 2.5rem;
+  font-weight: bold;
+}
+
+.post-homepage-item .post-meta {
+  font-style: italic;
+  margin-top: 0rem;
+}
+
+.post-homepage-item .post-subtitle {
+  margin-top: 0rem;
+  margin-bottom: 0rem;
 }

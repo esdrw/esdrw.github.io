@@ -1,7 +1,7 @@
 body {
   font-family: "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
   /* background-color: #f4fbff; */
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 ul {
@@ -19,7 +19,7 @@ a {
 a:hover,
 a:focus,
 a:active {
-  color: #ddd;
+  color: #ccc;
 }
 
 h1 {
@@ -28,6 +28,14 @@ h1 {
   font-weight: bold;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 p {

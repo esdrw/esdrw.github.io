@@ -1,5 +1,5 @@
 .navbar {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.0rem;
 }
 
 .navbar .container {
@@ -11,7 +11,7 @@
   text-align: center;
   float: right;
   margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.0rem;
 }
 
 .navbar li {

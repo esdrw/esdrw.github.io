@@ -1,5 +1,5 @@
 # ewang12.github.io
-Personal website for writing down science
+Personal website for writing down science.
 
 To develop:
 
