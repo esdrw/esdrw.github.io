@@ -1,5 +1,4 @@
-# esdrw.github.io
-Personal website for writing down science.
+# Blog and personal website
 
 To develop:
 
