@@ -1,4 +1,5 @@
 import copy
+import mistune
 import os
 import pystache
 import re
@@ -18,6 +19,8 @@ TEMPLATES_DIR = os.path.join(GEN_DIR, 'templates')
 GLOBAL_VARS_FILE = os.path.join(ROOT_DIR, 'global.yml')
 BASIC_VARS = { 'url-home': '/', 'url-about': '/about/' }
 
+MISTUNE = mistune.Markdown()
+
 debug = False
 
 def templates_common_path(*arg):
@@ -26,8 +29,14 @@ def templates_common_path(*arg):
 def templates_posts_path(*arg):
     return os.path.join(GEN_DIR, 'templates', 'posts', *arg)
 
+def templates_about_path(*arg):
+    return os.path.join(GEN_DIR, 'templates', 'about', *arg)
+
 def site_build_posts_path(*arg):
     return os.path.join(BUILD_DIR, 'posts', *arg)
+
+def site_build_about_path(*arg):
+    return os.path.join(BUILD_DIR, 'about', *arg)
 
 def site_src_posts_path(*arg):
     return os.path.join(ROOT_DIR, 'posts', *arg)
@@ -38,6 +47,15 @@ def update_with_file_vars(vars_dict, fname):
         new_vars = yaml.safe_load(f)
 
     vars_dict.update(new_vars)
+
+def update_with_vars_from_file(vars_dict, dir_with_vars_file):
+    src_files = os.listdir(dir_with_vars_file)
+
+    # There should be at most one .yml file with post variables
+    vars_file = first_match(re.compile('.*yml'), src_files)
+    if vars_file != None:
+        update_with_file_vars(vars_dict, os.path.join(dir_with_vars_file, vars_file))
+    return vars_dict
 
 def parse_global_vars(basic_vars):
     update_with_file_vars(basic_vars, GLOBAL_VARS_FILE)
@@ -61,67 +79,74 @@ def move_assets():
         print("Build directory " + BUILD_DIR + " already exists. Please remove and try again.")
         exit(1)
 
-def render_common(templ_vars):
-    common_vars = {}
-    for fname in os.listdir(templates_common_path()):
-        f = open(templates_common_path(fname), 'r')
+def read_file(path):
+    with open(path, 'r') as f:
+        return f.read()
 
-        # Use the first word parsed out of the filename for referencing the rendered
-        # template in the future.
-        var_name = fname.split('.')[0]
-        common_vars[var_name] = pystache.render(f.read(), templ_vars)
-    templ_vars['common'] = common_vars
-    print(templ_vars)
-    return templ_vars
-
-# post_templs: dictionary mapping from a template name (sans mustache extension) to the template content
-# templ_vars: template variables from common or global
-# post_dir: the directory name of the current post being rendered
-def render_post(post_templs, templ_vars, post_dir):
-    new_vars = copy.deepcopy(templ_vars)
-    src_files = os.listdir(site_src_posts_path(post_dir))
-
-    # There should be exactly one .yml file with post variables
-    vars_file = first_match(re.compile('.*yml'), src_files)
+def render_markdown_from_file(content_dir):
+    src_files = os.listdir(content_dir)
 
     # There should be exactly one .md file with post content
     content_file = first_match(re.compile('.*md'), src_files)
-    post_vars = {}
-    if vars_file != None:
-        update_with_file_vars(post_vars, site_src_posts_path(post_dir, vars_file))
-    if content_file == None:
-        print("Content not found for post \"%s\". Please clean up and try again." % post_dir)
-        exit(1)
 
-    post_vars['content'] = 'Test' # render_markdown(content_file)
-    for templ_name in post_templs:
-        new_vars['post'] = post_vars
-        os.makedirs(site_build_posts_path(post_dir))
-        if debug:
-            print("Resolved post variables...")
-            print(post_vars)
-        with open(site_build_posts_path(post_dir, templ_name), 'w+') as f:
-            f.write(pystache.render(post_templs[templ_name], new_vars))
+    if content_file == None:
+        print("Content not found for post \"%s\". Please clean up and try again." % content_dir)
+        exit(1)
+    return MISTUNE(read_file(content_file))
+
+def render_common(templ_vars):
+    common_vars = {}
+    for fname in os.listdir(templates_common_path()):
+        templ = read_file(templates_common_path(fname))
+        # Use the first word parsed out of the filename for referencing the rendered
+        # template in the future.
+        var_name = fname.split('.')[0]
+        common_vars[var_name] = pystache.render(templ, templ_vars)
+    templ_vars['common'] = common_vars
+    return templ_vars
+
+# post_templ: content of post template
+# templ_vars: template variables from common or global
+# post_dir: the directory name of the current post being rendered
+def render_post(post_templ, templ_vars, post_dir):
+    new_vars = copy.deepcopy(templ_vars)
+    post_vars = {}
+    update_with_vars_from_file(post_vars, site_src_posts_path(post_dir))
+    post_vars['content'] = render_markdown_from_file(site_src_posts_path(post_dir))
+
+    os.makedirs(site_build_posts_path(post_dir))
+    new_vars['post'] = post_vars
+    if debug:
+        print("Resolved post variables...")
+        print(list(post_vars.keys()))
+    with open(site_build_posts_path(post_dir, 'index.html'), 'w+') as f:
+        f.write(pystache.render(post_templ, new_vars))
 
 def render_posts(templ_vars):
-    dir_name = 'posts'
     post_templ_files = os.listdir(templates_posts_path())
-    post_templs = {}
-    for templ_file in post_templ_files:
-        with open(templates_posts_path(templ_file), 'r') as f:
-            # Exclude the ".mustache" extension.
-            gen_fname = '.'.join(templ_file.split('.')[:-1])
-            post_templs[gen_fname] = f.read()
-
-    if debug:
-        print("Rendering each post to have these files...")
-        print(list(post_templs.keys()))
+    post_templ = read_file(templates_posts_path('index.html.mustache'))
 
     for dname in os.listdir(site_src_posts_path()):
         if debug:
             print("Rendering post...")
             print(dname)
-        render_post(post_templs, templ_vars, dname)
+        render_post(post_templ, templ_vars, dname)
+
+def render_about(templ_vars):
+    new_vars = copy.deepcopy(templ_vars)
+    templ = read_file(templates_about_path('index.html.mustache'))
+
+    about_vars = {}
+    update_with_vars_from_file(about_vars, site_src_about_path())
+    about_vars['content'] = render_markdown_from_file(site_src_about_path())
+
+    os.makedirs(site_build_about_path())
+    new_vars['about'] = about_vars
+    if debug:
+        print("Resolved about variables...")
+        print(list(about_vars.keys()))
+    with open(site_build_about_path('index.html'), 'w') as f:
+        f.write(pystache.render(templ, new_vars))
 
 def render_site():
     move_assets()
@@ -140,8 +165,8 @@ def render_site():
     # Render posts
     render_posts(templ_vars)
 
-    # Render posts
-    #  render_top()
+    # Render about page
+    render_about(templ_vars)
 
     # Move build dir into final dir
 
