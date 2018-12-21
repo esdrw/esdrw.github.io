@@ -6,6 +6,7 @@ import re
 import shutil
 import sys
 import yaml
+from pathlib import Path
 
 ROOT_DIR = 'site-src'
 GEN_DIR = 'generator'
@@ -23,6 +24,13 @@ MISTUNE = mistune.Markdown()
 
 debug = False
 
+def build_and_check_path(*arg):
+    path = os.path.join(*arg)
+    if not Path(path).exists():
+        print("Could not find file or directory at \"%s\"." % path)
+        exit(1)
+    return path
+
 def templates_common_path(*arg):
     return os.path.join(GEN_DIR, 'templates', 'common', *arg)
 
@@ -39,7 +47,10 @@ def site_build_about_path(*arg):
     return os.path.join(BUILD_DIR, 'about', *arg)
 
 def site_src_posts_path(*arg):
-    return os.path.join(ROOT_DIR, 'posts', *arg)
+    return build_and_check_path(ROOT_DIR, 'posts', *arg)
+
+def site_src_about_path(*arg):
+    return build_and_check_path(ROOT_DIR, 'about', *arg)
 
 def update_with_file_vars(vars_dict, fname):
     new_vars = {}
@@ -76,7 +87,7 @@ def move_assets():
         else:
             os.mkdir(BUILD_DIR)
     except FileExistsError:
-        print("Build directory " + BUILD_DIR + " already exists. Please remove and try again.")
+        print("Build directory %s already exists. Please remove and try again." % BUILD_DIR)
         exit(1)
 
 def read_file(path):
@@ -90,9 +101,9 @@ def render_markdown_from_file(content_dir):
     content_file = first_match(re.compile('.*md'), src_files)
 
     if content_file == None:
-        print("Content not found for post \"%s\". Please clean up and try again." % content_dir)
+        print("Content not found for post \"%s\". Please create the file and try again." % content_dir)
         exit(1)
-    return MISTUNE(read_file(content_file))
+    return MISTUNE(read_file(os.path.join(content_dir, content_file)))
 
 def render_common(templ_vars):
     common_vars = {}
@@ -119,13 +130,14 @@ def render_post(post_templ, templ_vars, post_dir):
     if debug:
         print("Resolved post variables...")
         print(list(post_vars.keys()))
-    with open(site_build_posts_path(post_dir, 'index.html'), 'w+') as f:
+    with open(site_build_posts_path(post_dir, 'index.html'), 'w') as f:
         f.write(pystache.render(post_templ, new_vars))
 
 def render_posts(templ_vars):
     post_templ_files = os.listdir(templates_posts_path())
     post_templ = read_file(templates_posts_path('index.html.mustache'))
 
+    print(site_src_posts_path())
     for dname in os.listdir(site_src_posts_path()):
         if debug:
             print("Rendering post...")
@@ -167,6 +179,9 @@ def render_site():
 
     # Render about page
     render_about(templ_vars)
+
+    # Render the homepage
+    # render_home(templ_vars)
 
     # Move build dir into final dir
 
