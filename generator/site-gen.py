@@ -183,6 +183,7 @@ def render_about(templ_vars):
         f.write(pystache.render(templ, new_vars))
 
 def update_with_post_list_vars(posts, templ_vars):
+    # TODO: parse the date
     posts_date = sorted(posts, key = lambda post: post['date'])
     templ_vars['post-snippets-date'] = posts_date
 
