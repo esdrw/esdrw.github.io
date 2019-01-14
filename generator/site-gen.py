@@ -24,12 +24,18 @@ MISTUNE = mistune.Markdown()
 
 debug = False
 
+def error_and_exit(msg):
+    print(msg)
+    exit(1)
+
 def build_and_check_path(*arg):
     path = os.path.join(*arg)
     if not Path(path).exists():
-        print("Could not find file or directory at \"%s\"." % path)
-        exit(1)
+        error_and_exit("Could not find file or directory at \"%s\"." % path)
     return path
+
+def templates_home_path(*arg):
+    return os.path.join(GEN_DIR, 'templates', 'homepage', *arg)
 
 def templates_common_path(*arg):
     return os.path.join(GEN_DIR, 'templates', 'common', *arg)
@@ -39,6 +45,9 @@ def templates_posts_path(*arg):
 
 def templates_about_path(*arg):
     return os.path.join(GEN_DIR, 'templates', 'about', *arg)
+
+def site_build_root_path(*arg):
+    return os.path.join(BUILD_DIR, *arg)
 
 def site_build_posts_path(*arg):
     return os.path.join(BUILD_DIR, 'posts', *arg)
@@ -59,7 +68,7 @@ def update_with_file_vars(vars_dict, fname):
 
     vars_dict.update(new_vars)
 
-def update_with_vars_from_file(vars_dict, dir_with_vars_file):
+def update_with_vars_from_dir(vars_dict, dir_with_vars_file):
     src_files = os.listdir(dir_with_vars_file)
 
     # There should be at most one .yml file with post variables
@@ -87,12 +96,34 @@ def move_assets():
         else:
             os.mkdir(BUILD_DIR)
     except FileExistsError:
-        print("Build directory %s already exists. Please remove and try again." % BUILD_DIR)
-        exit(1)
+        error_and_exit("Temporary build directory %s already exists. Please remove and try again." % BUILD_DIR)
+
+def move_site_build():
+    try:
+        shutil.copytree(BUILD_DIR, FINAL_DIR)
+    except FileExistsError:
+        error_and_exit("Build directory %s already exists. Please remove and try again." % FINAL_DIR)
+
 
 def read_file(path):
     with open(path, 'r') as f:
         return f.read()
+def required_fields_in_post_vars(post_vars):
+    return set(['date', 'title']) <= set(post_vars.keys())
+
+def get_all_post_vars():
+    all_post_vars = {}
+    for post_dir in os.listdir(site_src_posts_path()):
+        post_vars = {}
+        update_with_vars_from_dir(post_vars, site_src_posts_path(post_dir))
+        post_vars['content'] = render_markdown_from_file(site_src_posts_path(post_dir))
+        if debug:
+            print("Resolved post variables...")
+            print(list(post_vars.keys()))
+        if not required_fields_in_post_vars(post_vars):
+            error_and_exit("Post %s must have a date specified in the metadata file." % post_dir)
+        all_post_vars[post_dir] = post_vars
+    return all_post_vars
 
 def render_markdown_from_file(content_dir):
     src_files = os.listdir(content_dir)
@@ -101,8 +132,7 @@ def render_markdown_from_file(content_dir):
     content_file = first_match(re.compile('.*md'), src_files)
 
     if content_file == None:
-        print("Content not found for post \"%s\". Please create the file and try again." % content_dir)
-        exit(1)
+        error_and_exit("Content not found for post \"%s\". Please create the file and try again." % content_dir)
     return MISTUNE(read_file(os.path.join(content_dir, content_file)))
 
 def render_common(templ_vars):
@@ -119,37 +149,29 @@ def render_common(templ_vars):
 # post_templ: content of post template
 # templ_vars: template variables from common or global
 # post_dir: the directory name of the current post being rendered
-def render_post(post_templ, templ_vars, post_dir):
+def render_post(post_templ, templ_vars, post_dir, post_vars):
     new_vars = copy.deepcopy(templ_vars)
-    post_vars = {}
-    update_with_vars_from_file(post_vars, site_src_posts_path(post_dir))
-    post_vars['content'] = render_markdown_from_file(site_src_posts_path(post_dir))
 
     os.makedirs(site_build_posts_path(post_dir))
     new_vars['post'] = post_vars
-    if debug:
-        print("Resolved post variables...")
-        print(list(post_vars.keys()))
     with open(site_build_posts_path(post_dir, 'index.html'), 'w') as f:
         f.write(pystache.render(post_templ, new_vars))
 
 def render_posts(templ_vars):
-    post_templ_files = os.listdir(templates_posts_path())
     post_templ = read_file(templates_posts_path('index.html.mustache'))
 
-    print(site_src_posts_path())
-    for dname in os.listdir(site_src_posts_path()):
+    for dname, post_vars in get_all_post_vars().items():
         if debug:
             print("Rendering post...")
             print(dname)
-        render_post(post_templ, templ_vars, dname)
+        render_post(post_templ, templ_vars, dname, post_vars)
 
 def render_about(templ_vars):
     new_vars = copy.deepcopy(templ_vars)
     templ = read_file(templates_about_path('index.html.mustache'))
 
     about_vars = {}
-    update_with_vars_from_file(about_vars, site_src_about_path())
+    update_with_vars_from_dir(about_vars, site_src_about_path())
     about_vars['content'] = render_markdown_from_file(site_src_about_path())
 
     os.makedirs(site_build_about_path())
@@ -158,6 +180,22 @@ def render_about(templ_vars):
         print("Resolved about variables...")
         print(list(about_vars.keys()))
     with open(site_build_about_path('index.html'), 'w') as f:
+        f.write(pystache.render(templ, new_vars))
+
+def update_with_post_list_vars(posts, templ_vars):
+    posts_date = sorted(posts, key = lambda post: post['date'])
+    templ_vars['post-snippets-date'] = posts_date
+
+def render_home(templ_vars):
+    new_vars = copy.deepcopy(templ_vars)
+    templ = read_file(templates_home_path('index.html.mustache'))
+
+    posts = []
+    for dname, post_vars in get_all_post_vars().items():
+        post_vars['url'] = "/posts/%s/" % dname
+        posts.append(post_vars)
+    update_with_post_list_vars(posts, new_vars)
+    with open(site_build_root_path('index.html'), 'w') as f:
         f.write(pystache.render(templ, new_vars))
 
 def render_site():
@@ -181,15 +219,23 @@ def render_site():
     render_about(templ_vars)
 
     # Render the homepage
-    # render_home(templ_vars)
+    render_home(templ_vars)
 
     # Move build dir into final dir
+    move_site_build()
+    shutil.rmtree(BUILD_DIR)
 
 # This script must be run from the directory above generator/
 def main():
     global debug
-    if len(sys.argv) > 1 and sys.argv[1] == '-d':
-        debug = True
+    if len(sys.argv) > 1:
+        if '-d' in sys.argv or '--debug' in sys.argv:
+            debug = True
+        if '-c' in sys.argv or '--clean' in sys.argv:
+            if Path(BUILD_DIR).exists():
+                shutil.rmtree(BUILD_DIR)
+            if Path(FINAL_DIR).exists():
+                shutil.rmtree(FINAL_DIR)
     render_site()
 
 if __name__ == '__main__':
